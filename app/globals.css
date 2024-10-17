@@ -4,9 +4,15 @@
   --color-bg: #0a0a0a;
   --color-text: #33ff33;
   --color-primary: #33ff33;
-  --color-secondary:#00ffff; 
+  --color-secondary: #00ffff; 
   --color-emphasis: #ff33ff;
   --border-width: 2px;
+  --crt-shadow-offset-x: 0.04rem;
+  --crt-shadow-offset-y: 0.08rem;
+  --crt-shadow-blur: 0.04rem;
+  --crt-flicker-opacity: 0.96;
+  --crt-flicker-duration: 0.2s;
+  --crt-phosphor-blur: 12px;
 }
 
 body {
@@ -18,14 +24,15 @@ body {
   overflow-x: hidden;
   min-height: 100vh;
   font-family: 'Press Start 2P', cursive;
+  font-size: 18px;
 }
 
 /* Layout styles */
 .eight-bit-layout {
-  max-width: 800px;
-  margin: 60px auto 0; /* Increased top margin to accommodate the fixed CRT FX button */
+  max-width: 900px;
+  margin: 80px auto 0;
   border: var(--border-width) solid var(--color-text);
-  padding: 20px;
+  padding: 30px;
   box-shadow: 0 0 5px var(--color-text), 0 0 10px var(--color-text);
   background-color: rgba(10, 10, 10, 0.8);
   position: relative;
@@ -34,58 +41,56 @@ body {
 
 .eight-bit-header {
   border-bottom: var(--border-width) solid var(--color-text);
-  padding-bottom: 20px;
-  margin-bottom: 20px;
+  padding-bottom: 30px;
+  margin-bottom: 30px;
 }
 
 .eight-bit-title {
-  font-size: 32px;
+  font-size: 40px;
   color: var(--color-emphasis);
   text-align: center;
-  margin-bottom: 20px;
-  text-shadow: 3px 3px 0 var(--color-secondary);
+  margin-bottom: 30px;
+  text-shadow: 4px 4px 0 var(--color-secondary);
 }
 
 .eight-bit-nav {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 15px;
 }
 
 .eight-bit-main {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .eight-bit-section {
   border: var(--border-width) solid var(--color-primary);
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 30px;
+  margin-bottom: 30px;
   background-color: rgba(0, 0, 0, 0.2);
 }
 
 .eight-bit-subtitle {
-  font-size: 24px;
+  font-size: 32px;
   color: var(--color-emphasis);
-  margin-bottom: 10px;
-  text-shadow: 2px 2px 0 var(--color-secondary);
+  margin-bottom: 20px;
+  text-shadow: 3px 3px 0 var(--color-secondary);
 }
 
 .eight-bit-text {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .eight-bit-footer {
   border-top: var(--border-width) solid var(--color-text);
-  padding-top: 20px;
+  padding-top: 30px;
   text-align: center;
 }
 
-/* #region EightBit Link Styles */
 /* Eight-bit link styles */
 .eight-bit-link {
   color: var(--color-secondary);
-  text-decoration: none;
   position: relative;
   transition: all 0.3s ease;
 }
@@ -93,23 +98,23 @@ body {
 .eight-bit-link::before {
   content: '';
   position: absolute;
-  bottom: -2px;
+  bottom: -3px;
   left: 0;
   width: 100%;
-  height: 2px;
+  height: 3px;
   background-color: var(--color-secondary);
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
 
 .eight-bit-link:hover {
+  text-decoration: none;
   color: var(--color-emphasis);
 }
 
 .eight-bit-link:hover::before {
   transform: scaleX(1);
 }
-/* #endregion */
 
 /* CRT effects */
 .crt-effects {
@@ -124,7 +129,8 @@ body {
 }
 
 .crt-pixel,
-.crt-scanline {
+.crt-scanline,
+.crt-vignette {
   position: absolute;
   top: 0;
   left: 0;
@@ -134,12 +140,38 @@ body {
   transition: opacity 0.3s ease;
 }
 
+.crt-pixel.active,
+.crt-scanline.active,
+.crt-vignette.active {
+  opacity: 1;
+}
+
+.crt-pixel {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.05),
+    rgba(0, 255, 0, 0.05),
+    rgba(0, 0, 255, 0.05)
+  );
+  background-size: 4px 4px;
+}
+
+.crt-scanline {
+  background: linear-gradient(
+    to bottom,
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.1) 50%
+  );
+  background-size: 100% 5px;
+  animation: scanline 100s linear infinite;
+}
+
+@keyframes scanline {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100%; }
+}
+
 .crt-vignette {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   background: 
     radial-gradient(
       ellipse at center,
@@ -161,71 +193,82 @@ body {
       rgba(0, 0, 0, 0) 85%,
       rgba(0, 0, 0, 0.3) 100%
     );
-  border-radius: 15px;
-  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.3);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
+  border-radius: 20px;
+  box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.3);
 }
 
-
-.crt-pixel.active,
-.crt-scanline.active,
-.crt-vignette.active{
-  opacity: 1;
+/* Text effects */
+.crt-text-shadow {
+  text-shadow: 
+    var(--crt-shadow-offset-x) 0 var(--crt-shadow-blur) var(--color-emphasis), 
+    calc(-1 * var(--crt-shadow-offset-y)) 0 var(--crt-shadow-blur) var(--color-emphasis);
 }
 
-.crt-pixel {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 0, 0, 0.05),
-    rgba(0, 255, 0, 0.05),
-    rgba(0, 0, 255, 0.05)
-  );
-  background-size: 3px 3px;
+/* Shadow for primary color text */
+.crt-text-shadow-primary {
+  text-shadow: 
+    var(--crt-shadow-offset-x) 0 var(--crt-shadow-blur) var(--color-emphasis), 
+    calc(-1 * var(--crt-shadow-offset-y)) 0 var(--crt-shadow-blur) var(--color-primary);
 }
 
-.crt-scanline {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(18, 16, 16, 0) 50%,
-    rgba(0, 0, 0, 0.1) 50%
-  );
-  background-size: 100% 4px;
-  animation: scanline 100s linear infinite;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+/* Shadow for secondary color text */
+.crt-text-shadow-secondary {
+  text-shadow: 
+    var(--crt-shadow-offset-x) 0 var(--crt-shadow-blur) var(--color-primary), 
+    calc(-1 * var(--crt-shadow-offset-y)) 0 var(--crt-shadow-blur) var(--color-secondary);
 }
 
-.crt-scanline.active {
-  opacity: 1;
+/* Shadow for emphasis color text */
+.crt-text-shadow-emphasis {
+  text-shadow: 
+    var(--crt-shadow-offset-x) 0 var(--crt-shadow-blur) var(--color-primary), 
+    calc(-1 * var(--crt-shadow-offset-y)) 0 var(--crt-shadow-blur) var(--color-emphasis);
 }
 
-@keyframes scanline {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 0 100%;
-  }
+@keyframes textFlicker {
+  0%, 100% { opacity: var(--crt-flicker-opacity); }
+  50% { opacity: 1; }
 }
 
-.crt-flicker {
-  background-color: rgba(0, 0, 0, 0.03);
-  animation: flicker 0.15s infinite;
+.crt-text-flicker {
+  animation: textFlicker var(--crt-flicker-duration) infinite;
 }
 
-@keyframes flicker {
-  0% { opacity: 0.98; }
-  25% { opacity: 1; }
-  50% { opacity: 0.98; }
-  75% { opacity: 1; }
-  100% { opacity: 0.98; }
+/* Apply CRT effects to text elements */
+.crt-phosphor .eight-bit-text,
+.crt-phosphor .eight-bit-subtitle,
+.crt-phosphor .eight-bit-title,
+.crt-phosphor .eight-bit-link {
+  filter: drop-shadow(0 0 var(--crt-phosphor-blur) currentColor);
+}
+
+/* Combined effects */
+.crt-text-shadow.crt-phosphor .eight-bit-text,
+.crt-text-shadow.crt-phosphor .eight-bit-subtitle,
+.crt-text-shadow.crt-phosphor .eight-bit-title,
+.crt-text-shadow.crt-phosphor .eight-bit-link {
+  text-shadow: 
+    var(--crt-shadow-offset-y) 0 var(--crt-shadow-blur) var(--color-emphasis), 
+    calc(-1 * var(--crt-shadow-offset-y)) 0 var(--crt-shadow-blur) var(--color-primary),
+    0 0 var(--crt-phosphor-blur) currentColor;
+  filter: none;
+}
+
+/* Apply CRT effects to icons */
+.crt-icon {
+  fill: currentColor;
+  filter: drop-shadow(0 0 var(--crt-phosphor-blur) currentColor);
+}
+
+.crt-text-shadow .crt-icon {
+  filter: 
+    drop-shadow(var(--crt-shadow-offset-x) 0 var(--crt-shadow-blur) var(--color-secondary))
+    drop-shadow(calc(-1 * var(--crt-shadow-offset-y)) 0 var(--crt-shadow-blur) var(--color-primary))
+    drop-shadow(0 0 var(--crt-phosphor-blur) currentColor);
+}
+
+.crt-text-flicker .crt-icon {
+  animation: textFlicker var(--crt-flicker-duration) infinite;
 }
 
 /* EightBit Button Styles */
@@ -233,35 +276,34 @@ body {
   background-color: var(--color-bg);
   color: var(--color-secondary);
   border: var(--border-width) solid var(--color-secondary);
-  padding: 10px 20px;
+  padding: 15px 25px;
   font-family: inherit;
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
-  text-shadow: 2px 2px 0 var(--color-emphasis);
+  text-shadow: 3px 3px 0 var(--color-emphasis);
 }
 
 .eight-bit-button:hover {
   background-color: var(--color-secondary);
   color: var(--color-bg);
-  box-shadow: 0 0 10px var(--color-secondary);
+  box-shadow: 0 0 15px var(--color-secondary);
 }
-
 
 /* EightBit Dropdown Styles */
 .eb-dropdown-wrapper {
   position: fixed;
-  top: 10px;
-  left: 10px;
+  top: 15px;
+  left: 15px;
   z-index: 1010;
 }
 
 .eb-dropdown-button {
-  font-size: 12px;
-  padding: 5px 10px;
-  width: 60px;
+  font-size: 14px;
+  padding: 8px 12px;
+  width: 70px;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -273,17 +315,17 @@ body {
   top: 100%;
   left: 0;
   background-color: var(--color-bg);
-  border: 2px solid var(--color-text);
-  padding: 8px 0;
-  width: 200px;
-  font-size: 12px;
+  border: 3px solid var(--color-text);
+  padding: 10px 0;
+  width: 240px;
+  font-size: 14px;
   z-index: 1011;
 }
 
 .eb-dropdown-content > * {
   display: block;
-  width: 160px;
-  padding: 6px 12px;
+  width: 200px;
+  padding: 8px 15px;
   color: var(--color-text);
   transition: all 0.3s ease;
   text-align: left;
@@ -302,97 +344,23 @@ body {
   color: var(--color-bg);
 }
 
-/* CRT text shadow effect */
-.crt-text-shadow {
-  text-shadow: 
-    0.06rem 0 0.06rem #ea36af, 
-    -0.125rem 0 0.06rem #75fa69;
-}
-
-/* CRT text flicker effect */
-@keyframes textFlicker {
-  0% { opacity: 0.96; }
-  50% { opacity: 1; }
-  100% { opacity: 0.96; }
-}
-
-.crt-text-flicker {
-  animation: textFlicker 0.2s infinite;
-}
-
-/* Phosphor glow effect */
-.crt-phosphor {
-  filter: drop-shadow(0 0 10px var(--color-text));
-}
-
-/* Apply CRT text effects only when the body has the respective classes */
-body.crt-text-shadow, 
-body.crt-text-shadow h1, 
-body.crt-text-shadow h2, 
-body.crt-text-shadow h3, 
-body.crt-text-shadow h4, 
-body.crt-text-shadow h5, 
-body.crt-text-shadow h6, 
-body.crt-text-shadow p, 
-body.crt-text-shadow span, 
-body.crt-text-shadow a, 
-body.crt-text-shadow button {
-  text-shadow: 
-    0.06rem 0 0.06rem #ea36af, 
-    -0.125rem 0 0.06rem #75fa69;
-}
-
-body.crt-text-flicker, 
-body.crt-text-flicker h1, 
-body.crt-text-flicker h2, 
-body.crt-text-flicker h3, 
-body.crt-text-flicker h4, 
-body.crt-text-flicker h5, 
-body.crt-text-flicker h6, 
-body.crt-text-flicker p, 
-body.crt-text-flicker span, 
-body.crt-text-flicker a, 
-body.crt-text-flicker button {
-  animation: textFlicker 0.2s infinite;
-}
-
-body.crt-phosphor, 
-body.crt-phosphor h1, 
-body.crt-phosphor h2, 
-body.crt-phosphor h3, 
-body.crt-phosphor h4, 
-body.crt-phosphor h5, 
-body.crt-phosphor h6, 
-body.crt-phosphor p, 
-body.crt-phosphor span, 
-body.crt-phosphor a, 
-body.crt-phosphor button {
-  filter: drop-shadow(0 0 10px var(--color-text));
-}
-
-/* Combined effects */
-body.crt-text-shadow.crt-phosphor,
-body.crt-text-shadow.crt-phosphor h1, 
-body.crt-text-shadow.crt-phosphor h2, 
-body.crt-text-shadow.crt-phosphor h3, 
-body.crt-text-shadow.crt-phosphor h4, 
-body.crt-text-shadow.crt-phosphor h5, 
-body.crt-text-shadow.crt-phosphor h6, 
-body.crt-text-shadow.crt-phosphor p, 
-body.crt-text-shadow.crt-phosphor span, 
-body.crt-text-shadow.crt-phosphor a, 
-body.crt-text-shadow.crt-phosphor button {
-  text-shadow: 
-    0.06rem 0 0.06rem #ea36af, 
-    -0.125rem 0 0.06rem #75fa69,
-    0 0 5px var(--color-text);
-  filter: none;
-}
-
 /* Responsive styles */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+
   .eight-bit-layout {
-    padding: 10px;
+    padding: 20px;
+    margin-top: 60px;
+  }
+
+  .eight-bit-title {
+    font-size: 32px;
+  }
+
+  .eight-bit-subtitle {
+    font-size: 24px;
   }
 
   .eight-bit-nav {
@@ -401,6 +369,10 @@ body.crt-text-shadow.crt-phosphor button {
   }
 
   .eight-bit-nav .eight-bit-button {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+  }
+
+  .eight-bit-section {
+    padding: 20px;
   }
 }

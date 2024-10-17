@@ -66,7 +66,7 @@ export default function CRTEffect() {
       <div className="eb-dropdown-wrapper">
         <EBDropdown open={isOpen} onOpenChange={setIsOpen}>
           <EBDropdownTrigger asChild>
-            <EBButton variant="eightBit" size="sm" className="eb-dropdown-button">
+            <EBButton variant="eightBit" size="sm" className="eb-dropdown-button eight-bit-text">
               FX
             </EBButton>
           </EBDropdownTrigger>

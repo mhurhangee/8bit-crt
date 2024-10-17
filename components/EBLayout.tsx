@@ -12,17 +12,17 @@ export default function EightBitLayout({
     <div className="eight-bit-layout">
       <header className="eight-bit-header mb-6">
         <h1 className="eight-bit-title text-2xl mb-4">
-          <Icon name="tv" size={24} /> 8-Bit CRT <Icon name="tv" size={24} />
+          8-Bit CRT <Icon name="tv" size={24} />
         </h1>
         <nav className="eight-bit-nav flex space-x-4">
           <EBButton variant="eightBit" asChild>
-            <Link href="/">Home</Link>
+            <Link href="/" className="eight-bit-text">Home</Link>
           </EBButton>
           <EBButton variant="eightBit" asChild>
-            <Link href="/features">Features</Link>
+            <Link href="/features" className="eight-bit-text">Features</Link>
           </EBButton>
           <EBButton variant="eightBit" asChild>
-            <Link href="/tech">Tech</Link>
+            <Link href="/tech" className="eight-bit-text">Tech</Link>
           </EBButton>
         </nav>
       </header>

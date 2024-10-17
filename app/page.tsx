@@ -1,17 +1,26 @@
-import { EBButton } from "@/components/EBButton";
-
 export default function Home() {
   return (
-    <div>
+    <div className="eight-bit-text">
       <section className="eight-bit-section">
-        <h2 className="eight-bit-subtitle">Welcome to the 8-bit world!</h2>
-        <p className="eight-bit-text">
-          This is a retro-styled website built with Next.js and inspired by
-          8-bit graphics.
+        <h2 className="eight-bit-subtitle">Welcome to the future-past!</h2>
+        <p>
+          Step into a world where nostalgia meets innovation. This retro-styled website is inspired by the golden age of 8-bit gaming, bringing you a unique blend of old-school charm and modern web technology.
         </p>
-        <EBButton variant="eightBit" className="mt-4">
-          Welcome 
-        </EBButton>
+      </section>
+      <section className="eight-bit-section">
+        <h3 className="eight-bit-subtitle">Testimonials</h3>
+        <p>
+          "It makes me want to jump higher than ever!" - Mario
+        </p>
+        <p style={{ color: 'var(--color-emphasis)' }}>
+          "Pink is my favorite color, and this site is a dream!" - Kirby
+        </p>
+        <p>
+          "Gotta scroll fast! This site is as speedy as I am!" - Sonic
+        </p>
+        <p style={{ color: 'var(--color-secondary)' }}>
+          "I've never seen pixels this sharp since my last dungeon!" - Link
+        </p>
       </section>
     </div>
   );
