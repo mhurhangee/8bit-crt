@@ -4,7 +4,8 @@
   --color-bg: #0a0a0a;
   --color-text: #33ff33;
   --color-primary: #33ff33;
-  --color-secondary: #ff33ff;
+  --color-secondary:#00ffff; 
+  --color-emphasis: #ff33ff;
   --border-width: 2px;
 }
 
@@ -39,7 +40,7 @@ body {
 
 .eight-bit-title {
   font-size: 32px;
-  color: var(--color-primary);
+  color: var(--color-emphasis);
   text-align: center;
   margin-bottom: 20px;
   text-shadow: 3px 3px 0 var(--color-secondary);
@@ -57,7 +58,7 @@ body {
 }
 
 .eight-bit-section {
-  border: var(--border-width) solid var(--color-secondary);
+  border: var(--border-width) solid var(--color-primary);
   padding: 20px;
   margin-bottom: 20px;
   background-color: rgba(0, 0, 0, 0.2);
@@ -65,9 +66,9 @@ body {
 
 .eight-bit-subtitle {
   font-size: 24px;
-  color: var(--color-secondary);
+  color: var(--color-emphasis);
   margin-bottom: 10px;
-  text-shadow: 2px 2px 0 var(--color-primary);
+  text-shadow: 2px 2px 0 var(--color-secondary);
 }
 
 .eight-bit-text {
@@ -79,6 +80,36 @@ body {
   padding-top: 20px;
   text-align: center;
 }
+
+/* #region EightBit Link Styles */
+/* Eight-bit link styles */
+.eight-bit-link {
+  color: var(--color-secondary);
+  text-decoration: none;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.eight-bit-link::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-secondary);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.eight-bit-link:hover {
+  color: var(--color-emphasis);
+}
+
+.eight-bit-link:hover::before {
+  transform: scaleX(1);
+}
+/* #endregion */
 
 /* CRT effects */
 .crt-effects {
@@ -166,7 +197,7 @@ body {
     rgba(0, 0, 0, 0.1) 50%
   );
   background-size: 100% 4px;
-  animation: scanline 10s linear infinite;
+  animation: scanline 100s linear infinite;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -200,8 +231,8 @@ body {
 /* EightBit Button Styles */
 .eight-bit-button {
   background-color: var(--color-bg);
-  color: var(--color-text);
-  border: var(--border-width) solid var(--color-text);
+  color: var(--color-secondary);
+  border: var(--border-width) solid var(--color-secondary);
   padding: 10px 20px;
   font-family: inherit;
   font-size: 16px;
@@ -209,13 +240,13 @@ body {
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
-  text-shadow: 2px 2px 0 var(--color-secondary);
+  text-shadow: 2px 2px 0 var(--color-emphasis);
 }
 
 .eight-bit-button:hover {
-  background-color: var(--color-text);
+  background-color: var(--color-secondary);
   color: var(--color-bg);
-  box-shadow: 0 0 10px var(--color-text);
+  box-shadow: 0 0 10px var(--color-secondary);
 }
 
 
@@ -286,12 +317,12 @@ body {
 }
 
 .crt-text-flicker {
-  animation: textFlicker 0.1s infinite;
+  animation: textFlicker 0.2s infinite;
 }
 
 /* Phosphor glow effect */
 .crt-phosphor {
-  filter: drop-shadow(0 0 5px var(--color-text));
+  filter: drop-shadow(0 0 10px var(--color-text));
 }
 
 /* Apply CRT text effects only when the body has the respective classes */
@@ -322,7 +353,7 @@ body.crt-text-flicker p,
 body.crt-text-flicker span, 
 body.crt-text-flicker a, 
 body.crt-text-flicker button {
-  animation: textFlicker 0.1s infinite;
+  animation: textFlicker 0.2s infinite;
 }
 
 body.crt-phosphor, 
@@ -336,7 +367,7 @@ body.crt-phosphor p,
 body.crt-phosphor span, 
 body.crt-phosphor a, 
 body.crt-phosphor button {
-  filter: drop-shadow(0 0 5px var(--color-text));
+  filter: drop-shadow(0 0 10px var(--color-text));
 }
 
 /* Combined effects */

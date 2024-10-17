@@ -1,3 +1,5 @@
+// Icons from https://pixelarticons.com
+
 import React from "react";
 
 interface IconProps {
@@ -35,7 +37,7 @@ const Icon: React.FC<IconProps> = ({ name, size = 24, className = "" }) => {
       fill="currentColor"
       stroke="currentColor"
       strokeWidth="1"
-      className={className}
+      className={`crt-text-shadow crt-text-flicker crt-phosphor ${className}`}
     >
       {getPath()}
     </svg>
