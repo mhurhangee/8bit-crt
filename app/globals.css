@@ -241,13 +241,13 @@ body {
 
 /* CRT text flicker effect */
 @keyframes textFlicker {
-  0% { opacity: 0.87; }
+  0% { opacity: 0.92; }
   50% { opacity: 1; }
-  100% { opacity: 0.87; }
+  100% { opacity: 0.92; }
 }
 
 .crt-text-flicker {
-  animation: textFlicker 0.01s infinite;
+  animation: textFlicker 0.02s infinite;
 }
 
 /* Phosphor glow effect */
