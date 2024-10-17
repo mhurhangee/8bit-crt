@@ -10,7 +10,7 @@ export default function Home() {
           8-bit graphics.
         </p>
         <EBButton variant="eightBit" className="mt-4">
-          Welcome
+          Welcome 
         </EBButton>
       </section>
     </div>

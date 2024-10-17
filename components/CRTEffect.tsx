@@ -13,7 +13,6 @@ interface EffectState {
   pixel: boolean
   scanline: boolean
   vignette: boolean
-  flicker: boolean
   textShadow: boolean
   textFlicker: boolean
   phosphor: boolean
@@ -24,7 +23,6 @@ export default function CRTEffect() {
     pixel: true,
     scanline: true,
     vignette: true,
-    flicker: true,
     textShadow: true,
     textFlicker: true,
     phosphor: true
@@ -74,7 +72,7 @@ export default function CRTEffect() {
           </EBDropdownTrigger>
           <EBDropdownContent className="eb-dropdown-content" align="start" alignOffset={0} sideOffset={5}>
             <EBDropdownItem onSelect={() => handleSelect(toggleAll)}>
-              Toggle All: {Object.values(effects).every(v => v) ? 'On' : 'Off'}
+              All: {Object.values(effects).every(v => v) ? 'On' : 'Off'}
             </EBDropdownItem>
             {Object.entries(effects).map(([key, value]) => (
               <EBDropdownItem key={key} onSelect={() => handleSelect(() => toggleEffect(key as keyof EffectState))}>
