@@ -1,0 +1,317 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root {
+  --color-bg: #0a0a0a;
+  --color-text: #33ff33;
+  --color-primary: #33ff33;
+  --color-secondary: #ff33ff;
+  --border-width: 2px;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+  font-family: 'Press Start 2P', cursive;
+}
+
+/* Layout styles */
+.eight-bit-layout {
+  max-width: 800px;
+  margin: 60px auto 0; /* Increased top margin to accommodate the fixed CRT FX button */
+  border: var(--border-width) solid var(--color-text);
+  padding: 20px;
+  box-shadow: 0 0 5px var(--color-text), 0 0 10px var(--color-text);
+  background-color: rgba(10, 10, 10, 0.8);
+  position: relative;
+  z-index: 1;
+}
+
+.eight-bit-header {
+  border-bottom: var(--border-width) solid var(--color-text);
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.eight-bit-title {
+  font-size: 32px;
+  color: var(--color-primary);
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 3px 3px 0 var(--color-secondary);
+}
+
+.eight-bit-nav {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.eight-bit-main {
+  margin-bottom: 20px;
+}
+
+.eight-bit-section {
+  border: var(--border-width) solid var(--color-secondary);
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.eight-bit-subtitle {
+  font-size: 24px;
+  color: var(--color-secondary);
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 0 var(--color-primary);
+}
+
+.eight-bit-text {
+  font-size: 16px;
+}
+
+.eight-bit-footer {
+  border-top: var(--border-width) solid var(--color-text);
+  padding-top: 20px;
+  text-align: center;
+}
+
+/* CRT effects */
+.crt-effects {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.crt-pixel,
+.crt-scanline,
+.crt-vignette,
+.crt-flicker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.crt-pixel.active,
+.crt-scanline.active,
+.crt-vignette.active,
+.crt-flicker.active {
+  opacity: 1;
+}
+
+.crt-pixel {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.05),
+    rgba(0, 255, 0, 0.05),
+    rgba(0, 0, 255, 0.05)
+  );
+  background-size: 3px 3px;
+}
+
+.crt-scanline {
+  background: linear-gradient(
+    to bottom,
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.1) 50%
+  );
+  background-size: 100% 4px;
+  animation: scanline 10s linear infinite;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(100%); }
+}
+
+.crt-vignette {
+  background: radial-gradient(
+    circle at center,
+    transparent 60%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+}
+
+.crt-flicker {
+  background-color: rgba(0, 0, 0, 0.03);
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.98; }
+  25% { opacity: 1; }
+  50% { opacity: 0.98; }
+  75% { opacity: 1; }
+  100% { opacity: 0.98; }
+}
+
+/* EightBit Button Styles */
+.eight-bit-button {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border: var(--border-width) solid var(--color-text);
+  padding: 10px 20px;
+  font-family: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 0 var(--color-secondary);
+}
+
+.eight-bit-button:hover {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+  box-shadow: 0 0 10px var(--color-text);
+}
+
+
+/* EightBit Dropdown Styles */
+.eb-dropdown-wrapper {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1010;
+}
+
+.eb-dropdown-button {
+  font-size: 12px;
+  padding: 5px 10px;
+  width: 60px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.eb-dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--color-bg);
+  border: 2px solid var(--color-text);
+  padding: 8px 0;
+  width: 200px;
+  font-size: 12px;
+  z-index: 1011;
+}
+
+.eb-dropdown-content > * {
+  display: block;
+  width: 160px;
+  padding: 6px 12px;
+  color: var(--color-text);
+  transition: all 0.3s ease;
+  text-align: left;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.eb-dropdown-content > *:hover {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+}
+
+/* CRT text shadow effect */
+.crt-text-shadow {
+  text-shadow: 
+    0.06rem 0 0.06rem #ea36af, 
+    -0.125rem 0 0.06rem #75fa69;
+}
+
+/* CRT text flicker effect */
+@keyframes textFlicker {
+  0% { opacity: 0.87; }
+  50% { opacity: 1; }
+  100% { opacity: 0.87; }
+}
+
+.crt-text-flicker {
+  animation: textFlicker 0.01s infinite;
+}
+
+/* Phosphor glow effect */
+.crt-phosphor {
+  text-shadow: 0 0 5px var(--color-text);
+}
+
+/* Apply CRT text effects only when the body has the respective classes */
+body.crt-text-shadow, 
+body.crt-text-shadow h1, 
+body.crt-text-shadow h2, 
+body.crt-text-shadow h3, 
+body.crt-text-shadow h4, 
+body.crt-text-shadow h5, 
+body.crt-text-shadow h6, 
+body.crt-text-shadow p, 
+body.crt-text-shadow span, 
+body.crt-text-shadow a, 
+body.crt-text-shadow button {
+  text-shadow: 
+    0.06rem 0 0.06rem #ea36af, 
+    -0.125rem 0 0.06rem #75fa69;
+}
+
+body.crt-text-flicker, 
+body.crt-text-flicker h1, 
+body.crt-text-flicker h2, 
+body.crt-text-flicker h3, 
+body.crt-text-flicker h4, 
+body.crt-text-flicker h5, 
+body.crt-text-flicker h6, 
+body.crt-text-flicker p, 
+body.crt-text-flicker span, 
+body.crt-text-flicker a, 
+body.crt-text-flicker button {
+  animation: textFlicker 0.01s infinite;
+}
+
+body.crt-phosphor, 
+body.crt-phosphor h1, 
+body.crt-phosphor h2, 
+body.crt-phosphor h3, 
+body.crt-phosphor h4, 
+body.crt-phosphor h5, 
+body.crt-phosphor h6, 
+body.crt-phosphor p, 
+body.crt-phosphor span, 
+body.crt-phosphor a, 
+body.crt-phosphor button {
+  text-shadow: 0 0 5px var(--color-text);
+}
+
+/* Responsive styles */
+@media (max-width: 640px) {
+  .eight-bit-layout {
+    padding: 10px;
+  }
+
+  .eight-bit-nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .eight-bit-nav .eight-bit-button {
+    margin-bottom: 10px;
+  }
+}
