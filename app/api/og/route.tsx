@@ -1,5 +1,6 @@
 import { ImageResponse } from '@vercel/og'
 import { NextRequest } from 'next/server'
+import Icon from '@/components/EBIcons'
 
 export const runtime = 'edge'
 
@@ -22,7 +23,9 @@ export async function GET(req: NextRequest) {
           fontWeight: 800,
         }}
       >
-        <div style={{ color: '#33ff33' }}>{title}</div>
+        <h1 className="eight-bit-title text-2xl mb-4">
+          8-Bit CRT <Icon name="tv" size={24} />
+        </h1>
       </div>
     ),
     {
