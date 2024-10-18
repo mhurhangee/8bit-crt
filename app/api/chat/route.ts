@@ -1,8 +1,9 @@
 import { kv } from '@vercel/kv';
 import { openai } from '@ai-sdk/openai';
-import { convertToCoreMessages, streamText } from 'ai';
+import { convertToCoreMessages, streamText, generateObject } from 'ai';
 import { Ratelimit } from '@upstash/ratelimit';
 import { NextRequest } from 'next/server';
+import { z } from 'zod';
 
 // Allow streaming responses up to 10 seconds
 export const maxDuration = 10;
@@ -21,6 +22,26 @@ const globalRatelimit = new Ratelimit({
   prefix: 'ratelimit:global',
 });
 
+// Create bad response rate limit
+const badResponseRatelimit = new Ratelimit({
+  redis: kv,
+  limiter: Ratelimit.slidingWindow(3, '24 h'),
+  prefix: 'ratelimit:badresponse',
+});
+
+async function isContentAppropriate(messages: any[]) {
+  const lastFewMessages = messages.slice(-5); // Get the last 3 messages
+  const checkResult = await generateObject({
+    model: openai('gpt-4o-mini'),
+    schema: z.object({
+      isAppropriate: z.boolean(),
+    }),
+    prompt: `Check if the following conversation is appropriate for an 8-bit video game assistant. Only flag as inappropriate if it's clearly unrelated to 8-bit games or contains offensive content. Here are the last few messages:\n\n${JSON.stringify(lastFewMessages)}\n\nRespond with a boolean 'isAppropriate' and if it's not appropriate.`,
+  });
+
+  return checkResult.object.isAppropriate;
+}
+
 export async function POST(req: NextRequest) {
   const ip = req.ip ?? 'ip';
 
@@ -37,6 +58,20 @@ export async function POST(req: NextRequest) {
   }
 
   const { messages } = await req.json();
+
+  // Check if content is appropriate
+  const appropriate = await isContentAppropriate(messages);
+
+  console.log('Is content appropriate?', appropriate);
+
+  if (!appropriate) {
+    // Increment bad response count
+    const badResponseLimit = await badResponseRatelimit.limit(ip);
+    if (!badResponseLimit.success) {
+      return new Response('Too many inappropriate requests. You are temporarily blocked.', { status: 429 });
+    }
+    return new Response('I cannot respond to that as it may not be appropriate for an 8-bit video game assistant.', { status: 400 });
+  }
 
   const result = await streamText({
     model: openai('gpt-4o-mini'),
