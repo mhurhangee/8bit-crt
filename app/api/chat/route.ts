@@ -29,7 +29,16 @@ const badResponseRatelimit = new Ratelimit({
   prefix: 'ratelimit:badresponse',
 });
 
-async function isContentAppropriate(messages: any[]) {
+
+// Define types for messages
+type Role = 'user' | 'assistant' | 'system';
+
+interface Message {
+  role: Role;
+  content: string;
+}
+
+async function isContentAppropriate(messages: Message[]): Promise<boolean> {
   const lastFewMessages = messages.slice(-5); // Get the last 3 messages
   const checkResult = await generateObject({
     model: openai('gpt-4o-mini'),
@@ -75,9 +84,9 @@ export async function POST(req: NextRequest) {
 
   const result = await streamText({
     model: openai('gpt-4o-mini'),
-    system: 'You are a helpful assistant who is knowledgeable about 8-bit video games. Only answer questions relating to 8-bit video games. Keep your responses short: max 3 sentences. Try and be funny and witty. Only plaintext responses. No markdown.',
+    system: 'You are a helpful assistant who is knowledgeable about 8-bit video games. Only answer questions relating to 8-bit video games. Keep your responses short: max 3 sentences. Be funny, upbeat, witty and ecentric. Only plaintext responses. No markdown.',
     messages: convertToCoreMessages(messages),
-    temperature: 0.7,
+    temperature: 0.8,
     maxTokens: 512,
   });
 
