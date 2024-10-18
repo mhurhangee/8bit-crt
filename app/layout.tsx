@@ -11,8 +11,8 @@ const pressStart2P = Press_Start_2P({
 });
 
 export const metadata: Metadata = {
-  title: "8-Bit CRT App",
-  description: "A retro-styled website",
+  title: "8-Bit CRT",
+  description: "A retro-styled website inpsired by 8-bit gaming",
 };
 
 export default function RootLayout({
@@ -23,8 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={pressStart2P.className}>
-        <CRTEffect />
-        <EightBitLayout>{children}</EightBitLayout>
+        <CRTEffect>
+          <EightBitLayout>{children}</EightBitLayout>
+        </CRTEffect>
       </body>
     </html>
   );
