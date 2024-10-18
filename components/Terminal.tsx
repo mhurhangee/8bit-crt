@@ -72,6 +72,7 @@ export function Terminal() {
       if (trimmedInput.startsWith('/')) {
         handleCommand(trimmedInput.slice(1))
       } else {
+        //@ts-ignore
         handleSubmit(e as any)
       }
     }
