@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, Suspense } from 'react'
-import { usePathname, useSearchParams  } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { EBButton } from "./EBButton"
 import {
   EBDropdown,
@@ -22,11 +22,6 @@ interface EffectState {
 
 interface CRTEffectProps {
   children: React.ReactNode
-}
-
-function SearchParamsWrapper() {
-  const searchParams = useSearchParams()
-  return null
 }
 
 export default function CRTEffect({ children }: CRTEffectProps) {
@@ -72,10 +67,7 @@ export default function CRTEffect({ children }: CRTEffectProps) {
   
 
   return (
-    <>
-      <Suspense fallback={null}>
-        <SearchParamsWrapper />
-      </Suspense>
+<>
       <div className="crt-effects">
         {Object.entries(effects).map(([key, value]) => 
           !['textShadow', 'textFlicker', 'phosphor', 'pageTransition'].includes(key) && 
