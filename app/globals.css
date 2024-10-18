@@ -48,6 +48,7 @@ body {
   color: var(--color-primary);
   font-size: 24px;
   margin-bottom: 20px;
+  text-align: center;
 }
 .loading-bar-container {
   width: 200px;
@@ -384,7 +385,7 @@ body {
 /* Responsive styles */
 @media (max-width: 768px) {
   body {
-    font-size: 16px;
+    font-size: 10px;
   }
 
   .eight-bit-layout {
@@ -393,11 +394,15 @@ body {
   }
 
   .eight-bit-title {
-    font-size: 32px;
+    font-size: 24px;
   }
 
   .eight-bit-subtitle {
-    font-size: 24px;
+    font-size: 18px;
+  }
+
+  .eight-bit-text {
+    font-size: 12px;
   }
 
   .eight-bit-nav {
@@ -410,6 +415,6 @@ body {
   }
 
   .eight-bit-section {
-    padding: 20px;
+    padding: 10px;
   }
 }

@@ -95,7 +95,7 @@ export default function CRTEffect({ children }: CRTEffectProps) {
       </div>
       {isLoading ? (
         <div className="loading-screen crt-content">
-          <div className="loading-text">FAKE LOADING SCREEN ...</div>
+          <div className="loading-text items-center">FAKE LOADING SCREEN ...</div>
           <div className="loading-bar-container">
             <div className="loading-bar"></div>
           </div>
