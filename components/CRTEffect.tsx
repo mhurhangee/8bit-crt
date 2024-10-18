@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
+import React, { useState, useEffect, Suspense } from 'react'
+import { usePathname, useSearchParams  } from 'next/navigation'
 import { EBButton } from "./EBButton"
 import {
   EBDropdown,
@@ -24,9 +24,13 @@ interface CRTEffectProps {
   children: React.ReactNode
 }
 
+function SearchParamsWrapper() {
+  const searchParams = useSearchParams()
+  return null
+}
+
 export default function CRTEffect({ children }: CRTEffectProps) {
   const pathname = usePathname()
-  const searchParams = useSearchParams()
   const [effects, setEffects] = useState<EffectState>({
     pixel: true,
     scanline: true,
@@ -47,7 +51,7 @@ export default function CRTEffect({ children }: CRTEffectProps) {
       }, 1000) // 1 second loading time
       return () => clearTimeout(timer)
     }
-  }, [pathname, searchParams, effects.pageTransition])
+  }, [pathname, effects.pageTransition])
 
   const toggleEffect = (effect: keyof EffectState) => {
     setEffects(prev => ({ ...prev, [effect]: !prev[effect] }))
@@ -69,6 +73,9 @@ export default function CRTEffect({ children }: CRTEffectProps) {
 
   return (
     <>
+      <Suspense fallback={null}>
+        <SearchParamsWrapper />
+      </Suspense>
       <div className="crt-effects">
         {Object.entries(effects).map(([key, value]) => 
           !['textShadow', 'textFlicker', 'phosphor', 'pageTransition'].includes(key) && 
