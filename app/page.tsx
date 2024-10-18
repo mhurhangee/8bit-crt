@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <div className="eight-bit-text">
+    <div className="eight-bit-text crt-border">
       <section className="eight-bit-section">
         <h2 className="eight-bit-subtitle">Welcome to the future-past!</h2>
         <p>
@@ -10,16 +10,16 @@ export default function Home() {
       <section className="eight-bit-section">
         <h3 className="eight-bit-subtitle">Testimonials</h3>
         <p>
-          "It makes me want to jump higher than ever!" - Mario
+        &quot;It makes me want to jump higher than ever!&quot; - Mario
         </p>
         <p style={{ color: 'var(--color-emphasis)' }}>
-          "Pink is my favorite color, and this site is a dream!" - Kirby
+        &quot;Pink is my favorite color, and this site is a dream!&quot; - Kirby
         </p>
         <p>
-          "Gotta scroll fast! This site is as speedy as I am!" - Sonic
+        &quot;Gotta scroll fast! This site is as speedy as I am!&quot; - Sonic
         </p>
         <p style={{ color: 'var(--color-secondary)' }}>
-          "I've never seen pixels this sharp since my last dungeon!" - Link
+        &quot;I&apos;ve never seen pixels this sharp since my last dungeon!&quot; - Link
         </p>
       </section>
     </div>
