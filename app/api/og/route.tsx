@@ -5,8 +5,8 @@ import Icon from '@/components/EBIcons'
 export const runtime = 'edge'
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url)
-  const title = searchParams.get('title') || '8-Bit CRT'
+  //const { searchParams } = new URL(req.url)
+  //const title = searchParams.get('title') || '8-Bit CRT'
 
   return new ImageResponse(
     (
