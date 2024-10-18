@@ -530,6 +530,7 @@ body {
   body {
     font-size: 10px;
   }
+  
 
   .eight-bit-layout {
     padding: 20px;
@@ -559,5 +560,18 @@ body {
 
   .eight-bit-section {
     padding: 10px;
+  }
+  .terminal-container {
+    height: calc(100vh - 150px); /* Adjust height for mobile */
+  }
+
+  .terminal-scroll-area,
+  .terminal-input {
+    font-size: 12px; /* Smaller font size for mobile */
+  }
+
+  .stop-button {
+    font-size: 12px;
+    padding: 0.3rem 0.8rem;
   }
 }

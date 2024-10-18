@@ -11,10 +11,22 @@ const pressStart2P = Press_Start_2P({
 });
 
 export const metadata: Metadata = {
-  title: "8-Bit CRT",
-  description: "A retro-styled website inpsired by 8-bit gaming",
-};
-
+  title: '8-Bit CRT',
+  description: 'Experience the nostalgia of 8-bit computing with our retro-styled website.',
+  openGraph: {
+    title: '8-Bit CRT',
+    description: 'Experience the nostalgia of 8-bit computing with our retro-styled website.',
+    images: [
+      {
+        url: 'https://8bit-crt.vercel.app/api/og?title=8-Bit%20CRT',
+        width: 1200,
+        height: 630,
+        alt: '8-Bit CRT Website Preview',
+      },
+    ],
+    type: 'website',
+  },
+}
 export default function RootLayout({
   children,
 }: {
