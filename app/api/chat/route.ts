@@ -1,4 +1,4 @@
-import kv from '@vercel/kv';
+import { kv } from '@vercel/kv';
 import { openai } from '@ai-sdk/openai';
 import { convertToCoreMessages, streamText } from 'ai';
 import { Ratelimit } from '@upstash/ratelimit';
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
 
   const result = await streamText({
     model: openai('gpt-4o-mini'),
-    system: 'You are a helpful assistant who is knowledgeable about 8-bit video games. Only answer questions relating to 8-bit video games. Keep your responses short: max 3 sentences. Try and be funny and witty.',
+    system: 'You are a helpful assistant who is knowledgeable about 8-bit video games. Only answer questions relating to 8-bit video games. Keep your responses short: max 3 sentences. Try and be funny and witty. Only plaintext responses. No markdown.',
     messages: convertToCoreMessages(messages),
     temperature: 0.7,
     maxTokens: 512,
