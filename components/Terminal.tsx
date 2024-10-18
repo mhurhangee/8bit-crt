@@ -2,18 +2,23 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useChat } from 'ai/react'
+import { useRouter } from 'next/navigation'
 
 const COMMANDS = {
-  help: 'Show available commands',
-  new: 'Start a new chat (delete message history)',
-  regen: 'Regenerate the last AI response',
-  del: 'Delete the last user message and AI response',
+  help: "Show available commands",
+  new: "Start a new chat (delete message history)",
+  regen: "Regenerate the last AI response",
+  del: "Delete the last user message and AI response",
+  fullscreen: "Toggle fullscreen mode for the terminal",
+  exit: "Close the terminal and return to the previous page",
+  home: "Navigate to the home page",
 }
 
-const WELCOME_MESSAGE = 'Welcome to the 8-bit AI Terminal! Type /help to see available commands.'
+const WELCOME_MESSAGE =
+  "Welcome to the 8-bit AI Terminal! Type /help to see available commands."
 
 const LoadingAnimation = () => {
-  const frames = ['|', '/', '-', '\\']
+  const frames = ["|", "/", "-", "\\"]
   const [frame, setFrame] = useState(0)
 
   useEffect(() => {
@@ -27,29 +32,37 @@ const LoadingAnimation = () => {
 }
 
 export function Terminal() {
-  const { messages: chatMessages, input, handleInputChange, handleSubmit, error, reload, setMessages, setInput, isLoading, stop } = useChat({
+  const router = useRouter()
+  const {
+    messages,
+    input,
+    handleInputChange,
+    handleSubmit,
+    error,
+    reload,
+    setMessages,
+    setInput,
+    isLoading,
+    stop,
+  } = useChat({
     initialMessages: [
-      { role: 'system', content: WELCOME_MESSAGE, id: 'welcome' }
+      { role: "system", content: WELCOME_MESSAGE, id: "welcome" },
     ],
     keepLastMessageOnError: true,
     onError: (error) => {
-      console.error("Chat error:", error);
-    }
+      console.error("Chat error:", error)
+    },
   })
-  const [displayMessages, setDisplayMessages] = useState(chatMessages)
   const [caretPosition, setCaretPosition] = useState(0)
+  const [isFullscreen, setIsFullscreen] = useState(false)
   const terminalRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    setDisplayMessages(chatMessages)
-  }, [chatMessages])
 
   useEffect(() => {
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight
     }
-  }, [displayMessages, error, isLoading])
+  }, [messages, error, isLoading])
 
   useEffect(() => {
     if (inputRef.current) {
@@ -65,11 +78,11 @@ export function Terminal() {
   })
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
       const trimmedInput = input.trim()
-      
-      if (trimmedInput.startsWith('/')) {
+
+      if (trimmedInput.startsWith("/")) {
         handleCommand(trimmedInput.slice(1))
       } else {
         handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>)
@@ -78,19 +91,32 @@ export function Terminal() {
   }
 
   const handleCommand = (command: string) => {
-    switch (command) {
-      case 'help':
-        setDisplayMessages(prev => [...prev, { role: 'system', content: 'Available commands:\n' + Object.entries(COMMANDS).map(([cmd, desc]) => `/${cmd} - ${desc}`).join('\n'), id: Date.now().toString() }])
+    const lowerCommand = command.toLowerCase()
+    switch (lowerCommand) {
+      case "help":
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "system",
+            content:
+              "Available commands:\n" +
+              Object.entries(COMMANDS)
+                .map(([cmd, desc]) => `/${cmd} - ${desc}`)
+                .join("\n"),
+            id: Date.now().toString(),
+          },
+        ])
         break
-      case 'new':
-        setMessages([{ role: 'system', content: WELCOME_MESSAGE, id: 'welcome' }])
-        setDisplayMessages([{ role: 'system', content: WELCOME_MESSAGE, id: 'welcome' }])
+      case "new":
+        setMessages([
+          { role: "system", content: WELCOME_MESSAGE, id: "welcome" },
+        ])
         break
-      case 'regen':
+      case "regen":
         reload()
         break
-      case 'del':
-        setMessages(prev => {
+      case "del":
+        setMessages((prev) => {
           const newMessages = [...prev]
           if (newMessages.length >= 2) {
             newMessages.splice(-2, 2)
@@ -98,10 +124,26 @@ export function Terminal() {
           return newMessages
         })
         break
+      case "fullscreen":
+        toggleFullscreen()
+        break
+      case "exit":
+        router.back()
+        break
+      case "home":
+        router.push('/')
+        break
       default:
-        setDisplayMessages(prev => [...prev, { role: 'system', content: `Unknown command: /${command}`, id: Date.now().toString() }])
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "system",
+            content: `Unknown command: /${command}`,
+            id: Date.now().toString(),
+          },
+        ])
     }
-    setInput('')
+    setInput("")
   }
 
   const handleClick = () => {
@@ -110,36 +152,60 @@ export function Terminal() {
     }
   }
 
+  const toggleFullscreen = () => {
+    if (terminalRef.current) {
+      if (!document.fullscreenElement) {
+        terminalRef.current.requestFullscreen().catch(err => {
+          console.error(`Error attempting to enable fullscreen mode: ${err.message}`)
+        })
+      } else {
+        document.exitFullscreen()
+      }
+      setIsFullscreen(!isFullscreen)
+    }
+  }
+
   const allDisplayMessages = [
-    ...displayMessages,
-    ...(error ? [{ role: 'system', content: `ERROR: ${error.message}`, id: 'error' }] : []),
-    ...(isLoading ? [{ role: 'assistant', content: '', id: 'loading' }] : [])
+    ...messages,
+    ...(error
+      ? [{ role: "system", content: `ERROR: ${error.message}`, id: "error" }]
+      : []),
+    ...(isLoading ? [{ role: "assistant", content: "", id: "loading" }] : []),
   ]
 
   return (
-    <div className="terminal-container">
+    <div 
+      ref={terminalRef}
+      className={`terminal-container ${isFullscreen ? 'fullscreen' : ''}`}
+    >
       <h2 className="eight-bit-subtitle mb-4">AI Terminal</h2>
 
-      <div className="terminal-scroll-area" ref={terminalRef}>
+      <div className="terminal-scroll-area">
         {allDisplayMessages.map((message, index) => (
           <div key={message.id || index} className="mb-2">
-            <span className={
-              message.role === 'user' 
-                ? 'user-message' 
-                : message.role === 'assistant' 
-                  ? 'ai-message' 
-                  : 'system-message'
-            }>
-              {message.role === 'user' ? '> ' : message.role === 'assistant' ? '$ ' : '! '}
+            <span
+              className={
+                message.role === "user"
+                  ? "user-message"
+                  : message.role === "assistant"
+                  ? "ai-message"
+                  : "system-message"
+              }
+            >
+              {message.role === "user"
+                ? "> "
+                : message.role === "assistant"
+                ? "$ "
+                : "! "}
             </span>
             <span className="message-content">
               {message.content}
-              {message.id === 'loading' && <LoadingAnimation />}
+              {message.id === "loading" && <LoadingAnimation />}
             </span>
           </div>
         ))}
         <div className="terminal-input-container">
-          <span className="user-message">{'> '}</span>
+          <span className="user-message">{"> "}</span>
           <div className="terminal-input-wrapper">
             <input
               ref={inputRef}
@@ -151,15 +217,17 @@ export function Terminal() {
               autoFocus
               disabled={isLoading || !!error}
             />
-            <div 
-              className="terminal-caret" 
+            <div
+              className="terminal-caret"
               style={{ left: `${caretPosition * 14}px` }}
             />
           </div>
         </div>
       </div>
       {isLoading && (
-        <button className="stop-button" onClick={stop}>Stop</button>
+        <button className="stop-button" onClick={stop}>
+          Stop
+        </button>
       )}
     </div>
   )
