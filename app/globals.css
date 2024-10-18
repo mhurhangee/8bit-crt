@@ -382,6 +382,126 @@ body {
   color: var(--color-bg);
 }
 
+.terminal-container {
+  height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-scroll-area {
+  flex-grow: 1;
+  border: var(--border-width) solid var(--color-primary);
+  background-color: var(--color-bg);
+  padding: 1rem;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-y: auto;
+}
+
+.terminal-input-container {
+  display: flex;
+  align-items: center;
+}
+
+.terminal-input-wrapper {
+  position: relative;
+  flex-grow: 1;
+}
+
+.terminal-input {
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  color: var(--color-text);
+  font-family: 'Press Start 2P', cursive;
+  font-size: 14px;
+  padding: 0;
+  margin: 0;
+  caret-color: transparent; /* Hide the default caret */
+}
+
+.terminal-input:focus {
+  outline: none;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+.terminal-caret {
+  position: absolute;
+  top: 0;
+  width: 8px;
+  height: 14px;
+  background-color: var(--color-primary);
+  animation: blink 1s step-end infinite;
+}
+
+.user-message {
+  color: var(--color-secondary);
+}
+
+.ai-message {
+  color: var(--color-emphasis);
+}
+
+.system-message {
+  color: var(--color-primary);
+}
+
+.message-content {
+  color: var(--color-text);
+}
+
+/* Scrollbar styles */
+.terminal-scroll-area {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-secondary) var(--color-bg);
+}
+
+.terminal-scroll-area::-webkit-scrollbar {
+  width: 12px;
+}
+
+.terminal-scroll-area::-webkit-scrollbar-track {
+  background: var(--color-bg);
+  border: 2px solid var(--color-primary);
+}
+
+.terminal-scroll-area::-webkit-scrollbar-thumb {
+  background-color: var(--color-secondary);
+  border: 2px solid var(--color-primary);
+}
+
+/* Pixelated corners for the scrollbar */
+.terminal-scroll-area::-webkit-scrollbar-button:single-button {
+  background-color: var(--color-secondary);
+  border: 2px solid var(--color-primary);
+  height: 12px;
+  width: 12px;
+}
+
+.terminal-scroll-area::-webkit-scrollbar-button:single-button:vertical:decrement {
+  border-width: 0 2px 2px 0;
+}
+
+.terminal-scroll-area::-webkit-scrollbar-button:single-button:vertical:increment {
+  border-width: 2px 2px 0 0;
+}
+
+/* Ensure the ScrollArea component uses these styles */
+.ScrollAreaScrollbar {
+  width: 12px !important;
+  padding: 0 !important;
+}
+
+.ScrollAreaThumb {
+  background-color: var(--color-secondary) !important;
+  border: 2px solid var(--color-primary) !important;
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
   body {

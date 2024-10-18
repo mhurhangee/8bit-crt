@@ -22,7 +22,7 @@ export default function EightBitLayout({
             <Link href="/features" className="eight-bit-text">Features</Link>
           </EBButton>
           <EBButton variant="eightBit" asChild>
-            <Link href="/tech" className="eight-bit-text">Tech</Link>
+            <Link href="/terminal" className="eight-bit-text">Terminal</Link>
           </EBButton>
         </nav>
       </header>
