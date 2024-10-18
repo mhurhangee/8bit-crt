@@ -6,15 +6,28 @@ import { useChat } from 'ai/react'
 const COMMANDS = {
   help: 'Show available commands',
   new: 'Start a new chat (delete message history)',
-  clear: 'Clear the terminal display (keeps message history)',
   regen: 'Regenerate the last AI response',
   del: 'Delete the last user message and AI response',
 }
 
 const WELCOME_MESSAGE = 'Welcome to the 8-bit AI Terminal! Type /help to see available commands.'
 
+const LoadingAnimation = () => {
+  const frames = ['|', '/', '-', '\\']
+  const [frame, setFrame] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setFrame((prevFrame) => (prevFrame + 1) % frames.length)
+    }, 250)
+    return () => clearInterval(timer)
+  }, [])
+
+  return <span className="loading-animation">{frames[frame]}</span>
+}
+
 export default function Terminal() {
-  const { messages: chatMessages, input, handleInputChange, handleSubmit, error, reload, setMessages, setInput } = useChat({
+  const { messages: chatMessages, input, handleInputChange, handleSubmit, error, reload, setMessages, setInput, isLoading, stop } = useChat({
     initialMessages: [
       { role: 'system', content: WELCOME_MESSAGE, id: 'welcome' }
     ],
@@ -36,7 +49,7 @@ export default function Terminal() {
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight
     }
-  }, [displayMessages, error])
+  }, [displayMessages, error, isLoading])
 
   useEffect(() => {
     if (inputRef.current) {
@@ -49,7 +62,7 @@ export default function Terminal() {
     if (inputRef.current) {
       inputRef.current.focus()
     }
-  }, [])
+  })
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -72,9 +85,6 @@ export default function Terminal() {
       case 'new':
         setMessages([{ role: 'system', content: WELCOME_MESSAGE, id: 'welcome' }])
         setDisplayMessages([{ role: 'system', content: WELCOME_MESSAGE, id: 'welcome' }])
-        break
-      case 'clear':
-        setDisplayMessages([{ role: 'system', content: 'Terminal cleared. Message history preserved.', id: Date.now().toString() }])
         break
       case 'regen':
         reload()
@@ -102,7 +112,8 @@ export default function Terminal() {
 
   const allDisplayMessages = [
     ...displayMessages,
-    ...(error ? [{ role: 'system', content: `ERROR: ${error.message}`, id: 'error' }] : [])
+    ...(error ? [{ role: 'system', content: `ERROR: ${error.message}`, id: 'error' }] : []),
+    ...(isLoading ? [{ role: 'assistant', content: 'Thinking...', id: 'loading' }] : [])
   ]
 
   return (
@@ -120,7 +131,10 @@ export default function Terminal() {
             }>
               {message.role === 'user' ? '> ' : message.role === 'assistant' ? '$ ' : '! '}
             </span>
-            <span className="message-content">{message.content}</span>
+            <span className="message-content">
+              {message.content}
+              {message.id === 'loading' && <LoadingAnimation />}
+            </span>
           </div>
         ))}
         <div className="terminal-input-container">
@@ -134,7 +148,7 @@ export default function Terminal() {
               onKeyDown={handleKeyDown}
               onClick={handleClick}
               autoFocus
-              disabled={!!error}
+              disabled={isLoading || !!error}
             />
             <div 
               className="terminal-caret" 
@@ -143,6 +157,9 @@ export default function Terminal() {
           </div>
         </div>
       </div>
+      {isLoading && (
+        <button className="stop-button" onClick={stop}>Stop</button>
+      )}
     </div>
   )
 }
