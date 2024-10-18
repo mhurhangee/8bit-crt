@@ -33,7 +33,7 @@ export default function Home() {
           Experience the magic of our 8-bit AI terminal! Chat with our retro-inspired AI assistant and explore the intersection of classic gaming aesthetics and cutting-edge technology.
         </p>
         <Link href="/terminal" className="eight-bit-button mt-4 inline-block">
-          Launch AI Terminal
+          Launch
         </Link>
       </section>
     </div>

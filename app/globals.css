@@ -525,6 +525,17 @@ body {
   background-color: var(--color-emphasis);
 }
 
+.terminal-container.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  background-color: var(--color-bg);
+  overflow: auto;
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
   body {

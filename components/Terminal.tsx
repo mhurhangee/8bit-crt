@@ -57,6 +57,7 @@ export function Terminal() {
   const [isFullscreen, setIsFullscreen] = useState(false)
   const terminalRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const caretRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (terminalRef.current) {
@@ -67,7 +68,7 @@ export function Terminal() {
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus()
-      setCaretPosition(input.length)
+      updateCaretPosition()
     }
   }, [input])
 
@@ -76,6 +77,37 @@ export function Terminal() {
       inputRef.current.focus()
     }
   })
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement)
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange)
+    }
+  }, [])
+
+  const updateCaretPosition = () => {
+    if (inputRef.current && caretRef.current) {
+      const inputRect = inputRef.current.getBoundingClientRect()
+      const selectionStart = inputRef.current.selectionStart || 0
+      const textBeforeCaret = input.slice(0, selectionStart)
+      const textWidth = getTextWidth(textBeforeCaret, getComputedStyle(inputRef.current))
+      setCaretPosition(textWidth)
+    }
+  }
+
+  const getTextWidth = (text: string, font: CSSStyleDeclaration) => {
+    const canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d')
+    if (context) {
+      context.font = font.font
+      return context.measureText(text).width
+    }
+    return 0
+  }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -88,6 +120,7 @@ export function Terminal() {
         handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>)
       }
     }
+    updateCaretPosition()
   }
 
   const handleCommand = (command: string) => {
@@ -147,21 +180,30 @@ export function Terminal() {
   }
 
   const handleClick = () => {
-    if (inputRef.current) {
-      setCaretPosition(inputRef.current.selectionStart || 0)
-    }
+    updateCaretPosition()
   }
 
   const toggleFullscreen = () => {
-    if (terminalRef.current) {
-      if (!document.fullscreenElement) {
-        terminalRef.current.requestFullscreen().catch(err => {
-          console.error(`Error attempting to enable fullscreen mode: ${err.message}`)
+    if (!isFullscreen) {
+      if (terminalRef.current) {
+        if (terminalRef.current.requestFullscreen) {
+          terminalRef.current.requestFullscreen().catch(err => {
+            console.error(`Error attempting to enable fullscreen mode: ${err.message}`)
+          })
+        } else {
+          // Fallback for browsers that don't support requestFullscreen
+          setIsFullscreen(true)
+        }
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(err => {
+          console.error(`Error attempting to exit fullscreen mode: ${err.message}`)
         })
       } else {
-        document.exitFullscreen()
+        // Fallback for browsers that don't support exitFullscreen
+        setIsFullscreen(false)
       }
-      setIsFullscreen(!isFullscreen)
     }
   }
 
@@ -211,15 +253,19 @@ export function Terminal() {
               ref={inputRef}
               className="terminal-input"
               value={input}
-              onChange={handleInputChange}
+              onChange={(e) => {
+                handleInputChange(e)
+                updateCaretPosition()
+              }}
               onKeyDown={handleKeyDown}
               onClick={handleClick}
               autoFocus
               disabled={isLoading || !!error}
             />
             <div
+              ref={caretRef}
               className="terminal-caret"
-              style={{ left: `${caretPosition * 14}px` }}
+              style={{ left: `${caretPosition}px` }}
             />
           </div>
         </div>
