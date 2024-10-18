@@ -383,7 +383,7 @@ body {
 }
 
 .terminal-container {
-  height: calc(100vh - 200px);
+  height: calc(100vh - 500px);
   display: flex;
   flex-direction: column;
 }
