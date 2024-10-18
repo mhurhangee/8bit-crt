@@ -1,10 +1,10 @@
 import { ImageResponse } from '@vercel/og'
-import { NextRequest } from 'next/server'
+//import { NextRequest } from 'next/server'
 import Icon from '@/components/EBIcons'
 
 export const runtime = 'edge'
 
-export async function GET(req: NextRequest) {
+export async function GET(/*req: NextRequest*/) {
   //const { searchParams } = new URL(req.url)
   //const title = searchParams.get('title') || '8-Bit CRT'
 
