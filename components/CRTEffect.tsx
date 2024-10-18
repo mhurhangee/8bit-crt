@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, Suspense } from 'react'
+import React, { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { EBButton } from "./EBButton"
 import {
