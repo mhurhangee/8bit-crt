@@ -91,7 +91,6 @@ export function Terminal() {
 
   const updateCaretPosition = () => {
     if (inputRef.current && caretRef.current) {
-      const inputRect = inputRef.current.getBoundingClientRect()
       const selectionStart = inputRef.current.selectionStart || 0
       const textBeforeCaret = input.slice(0, selectionStart)
       const textWidth = getTextWidth(textBeforeCaret, getComputedStyle(inputRef.current))
