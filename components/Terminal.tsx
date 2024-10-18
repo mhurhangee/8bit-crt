@@ -183,27 +183,7 @@ export function Terminal() {
   }
 
   const toggleFullscreen = () => {
-    if (!isFullscreen) {
-      if (terminalRef.current) {
-        if (terminalRef.current.requestFullscreen) {
-          terminalRef.current.requestFullscreen().catch(err => {
-            console.error(`Error attempting to enable fullscreen mode: ${err.message}`)
-          })
-        } else {
-          // Fallback for browsers that don't support requestFullscreen
-          setIsFullscreen(true)
-        }
-      }
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen().catch(err => {
-          console.error(`Error attempting to exit fullscreen mode: ${err.message}`)
-        })
-      } else {
-        // Fallback for browsers that don't support exitFullscreen
-        setIsFullscreen(false)
-      }
-    }
+    setIsFullscreen(!isFullscreen)
   }
 
   const allDisplayMessages = [
@@ -219,61 +199,63 @@ export function Terminal() {
       ref={terminalRef}
       className={`terminal-container ${isFullscreen ? 'fullscreen' : ''}`}
     >
-      <h2 className="eight-bit-subtitle mb-4">AI Terminal</h2>
+      <div className="terminal-content">
+        <h2 className="eight-bit-subtitle mb-4">AI Terminal</h2>
 
-      <div className="terminal-scroll-area">
-        {allDisplayMessages.map((message, index) => (
-          <div key={message.id || index} className="mb-2">
-            <span
-              className={
-                message.role === "user"
-                  ? "user-message"
+        <div className="terminal-scroll-area">
+          {allDisplayMessages.map((message, index) => (
+            <div key={message.id || index} className="mb-2">
+              <span
+                className={
+                  message.role === "user"
+                    ? "user-message"
+                    : message.role === "assistant"
+                    ? "ai-message"
+                    : "system-message"
+                }
+              >
+                {message.role === "user"
+                  ? "> "
                   : message.role === "assistant"
-                  ? "ai-message"
-                  : "system-message"
-              }
-            >
-              {message.role === "user"
-                ? "> "
-                : message.role === "assistant"
-                ? "$ "
-                : "! "}
-            </span>
-            <span className="message-content">
-              {message.content}
-              {message.id === "loading" && <LoadingAnimation />}
-            </span>
-          </div>
-        ))}
-        <div className="terminal-input-container">
-          <span className="user-message">{"> "}</span>
-          <div className="terminal-input-wrapper">
-            <input
-              ref={inputRef}
-              className="terminal-input"
-              value={input}
-              onChange={(e) => {
-                handleInputChange(e)
-                updateCaretPosition()
-              }}
-              onKeyDown={handleKeyDown}
-              onClick={handleClick}
-              autoFocus
-              disabled={isLoading || !!error}
-            />
-            <div
-              ref={caretRef}
-              className="terminal-caret"
-              style={{ left: `${caretPosition}px` }}
-            />
+                  ? "$ "
+                  : "! "}
+              </span>
+              <span className="message-content">
+                {message.content}
+                {message.id === "loading" && <LoadingAnimation />}
+              </span>
+            </div>
+          ))}
+          <div className="terminal-input-container">
+            <span className="user-message">{"> "}</span>
+            <div className="terminal-input-wrapper">
+              <input
+                ref={inputRef}
+                className="terminal-input"
+                value={input}
+                onChange={(e) => {
+                  handleInputChange(e)
+                  updateCaretPosition()
+                }}
+                onKeyDown={handleKeyDown}
+                onClick={handleClick}
+                autoFocus
+                disabled={isLoading || !!error}
+              />
+              <div
+                ref={caretRef}
+                className="terminal-caret"
+                style={{ left: `${caretPosition}px` }}
+              />
+            </div>
           </div>
         </div>
+        {isLoading && (
+          <button className="stop-button" onClick={stop}>
+            Stop
+          </button>
+        )}
       </div>
-      {isLoading && (
-        <button className="stop-button" onClick={stop}>
-          Stop
-        </button>
-      )}
     </div>
   )
 }

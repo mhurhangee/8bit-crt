@@ -533,7 +533,36 @@ body {
   height: 100vh;
   z-index: 9999;
   background-color: var(--color-bg);
-  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.terminal-content {
+  width: 100%;
+  max-width: 800px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-container.fullscreen .terminal-content {
+  border: var(--border-width) solid var(--color-primary);
+  background-color: var(--color-bg);
+  padding: 20px;
+  box-shadow: 0 0 20px var(--color-primary);
+}
+
+.terminal-scroll-area {
+  flex-grow: 1;
+  overflow-y: auto;
+  border: var(--border-width) solid var(--color-primary);
+  background-color: var(--color-bg);
+  padding: 1rem;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 /* Responsive styles */
@@ -572,6 +601,7 @@ body {
   .eight-bit-section {
     padding: 10px;
   }
+
   .terminal-container {
     height: calc(100vh - 150px); /* Adjust height for mobile */
   }
@@ -579,6 +609,19 @@ body {
   .terminal-scroll-area,
   .terminal-input {
     font-size: 12px; /* Smaller font size for mobile */
+  }
+
+  .terminal-container.fullscreen {
+    padding: 10px;
+  }
+
+  .terminal-container.fullscreen .terminal-content {
+    padding: 10px;
+  }
+
+  .terminal-scroll-area,
+  .terminal-input {
+    font-size: 12px;
   }
 
   .stop-button {

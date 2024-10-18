@@ -79,12 +79,12 @@ export async function POST(req: NextRequest) {
     if (!badResponseLimit.success) {
       return new Response('Too many inappropriate requests. You are temporarily blocked.', { status: 429 });
     }
-    return new Response('I cannot respond to that as it may not be appropriate for an 8-bit video game assistant.', { status: 400 });
+    return new Response('I cannot respond to that as it may not be appropriate for an 8-bit video game assistant. Refresh the page to try again!', { status: 400 });
   }
 
   const result = await streamText({
     model: openai('gpt-4o-mini'),
-    system: 'You are a helpful assistant who is knowledgeable about 8-bit video games. Only answer questions relating to 8-bit video games. Keep your responses short: max 3 sentences. Be funny, upbeat, witty and ecentric. Only plaintext responses. No markdown.',
+    system: 'You are a helpful assistant who is an expert and hugely enthuastic about 8-bit video games. Only answer questions relating to 8-bit video games. Keep your responses short: max 3 sentences. Be funny, upbeat, witty and ecentric. Only plaintext responses. No markdown.',
     messages: convertToCoreMessages(messages),
     temperature: 0.8,
     maxTokens: 512,
